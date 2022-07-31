@@ -71,7 +71,7 @@ class TestSchemaType < MiniTest::Test
     resolve_type ->(_type, _obj, _ctx) { raise NotImplementedError }
   end
 
-  Types = GraphQL::Client::Schema.generate(Schema)
+  Types = GraphQL::Client::Schema.generate(Schema, raise_on_unknown_enum_values: true)
 
   def test_query_object_class
     assert_equal QueryType, Types::Query.type
@@ -127,6 +127,7 @@ class TestSchemaType < MiniTest::Test
   end
 
   def test_plan_enum_constants
+    require 'pry-byebug'
     assert_kind_of GraphQL::Client::Schema::EnumType, Types::Plan
     assert_equal PlanEnum, Types::Plan.type
     assert_equal "TestSchemaType::Types::Plan", Types::Plan.inspect
@@ -332,7 +333,7 @@ class TestSchemaType < MiniTest::Test
       resolve_type ->(_type, _obj, _ctx) { raise NotImplementedError }
     end
 
-    types = GraphQL::Client::Schema.generate(schema)
+    types = GraphQL::Client::Schema.generate(schema, raise_on_unknown_enum_values: true)
 
     assert_equal person_type, types::Person.type
     assert_equal photo_type, types::Photo.type
@@ -361,7 +362,7 @@ class TestSchemaType < MiniTest::Test
     end
 
     assert_raises ArgumentError do
-      GraphQL::Client::Schema.generate(schema)
+      GraphQL::Client::Schema.generate(schema, raise_on_unknown_enum_values: true)
     end
   end
 
