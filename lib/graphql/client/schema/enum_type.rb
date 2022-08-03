@@ -40,7 +40,7 @@ module GraphQL
         # Internal: Construct enum wrapper from another GraphQL::EnumType.
         #
         # type - GraphQL::EnumType instance
-        def initialize(type, raise_on_unknown_enum_values:)
+        def initialize(type, raise_on_unknown_enum_value:)
           unless type.kind.enum?
             raise "expected type to be an Enum, but was #{type.class}"
           end
@@ -60,7 +60,7 @@ module GraphQL
           end
 
           @values.freeze
-          @raise_on_unknown_enum_values = raise_on_unknown_enum_values
+          @raise_on_unknown_enum_value = raise_on_unknown_enum_value
         end
 
         def define_class(definition, ast_nodes)
@@ -83,7 +83,7 @@ module GraphQL
           when String
             if @values.key?(value)
               @values[value]
-            elsif @raise_on_unknown_enum_values
+            elsif @raise_on_unknown_enum_value
               raise Error, "unexpected enum value #{value}"
             else
               "__unexpected_enum_value__"

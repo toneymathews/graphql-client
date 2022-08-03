@@ -71,7 +71,11 @@ class TestSchemaType < MiniTest::Test
     resolve_type ->(_type, _obj, _ctx) { raise NotImplementedError }
   end
 
-  Types = GraphQL::Client::Schema.generate(Schema, raise_on_unknown_enum_values: true)
+  Schema.define_singleton_method(:raise_on_unknown_enum_value) do
+    true
+  end
+
+  Types = GraphQL::Client::Schema.generate(Schema)
 
   def test_query_object_class
     assert_equal QueryType, Types::Query.type
@@ -333,7 +337,7 @@ class TestSchemaType < MiniTest::Test
       resolve_type ->(_type, _obj, _ctx) { raise NotImplementedError }
     end
 
-    types = GraphQL::Client::Schema.generate(schema, raise_on_unknown_enum_values: true)
+    types = GraphQL::Client::Schema.generate(schema)
 
     assert_equal person_type, types::Person.type
     assert_equal photo_type, types::Photo.type
@@ -362,7 +366,7 @@ class TestSchemaType < MiniTest::Test
     end
 
     assert_raises ArgumentError do
-      GraphQL::Client::Schema.generate(schema, raise_on_unknown_enum_values: true)
+      GraphQL::Client::Schema.generate(schema)
     end
   end
 
