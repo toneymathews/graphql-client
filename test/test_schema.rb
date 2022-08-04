@@ -71,6 +71,10 @@ class TestSchemaType < MiniTest::Test
     resolve_type ->(_type, _obj, _ctx) { raise NotImplementedError }
   end
 
+  Schema.define_singleton_method(:raise_on_unknown_enum_value) do
+    true
+  end
+
   Types = GraphQL::Client::Schema.generate(Schema)
 
   def test_query_object_class
@@ -127,6 +131,7 @@ class TestSchemaType < MiniTest::Test
   end
 
   def test_plan_enum_constants
+    require 'pry-byebug'
     assert_kind_of GraphQL::Client::Schema::EnumType, Types::Plan
     assert_equal PlanEnum, Types::Plan.type
     assert_equal "TestSchemaType::Types::Plan", Types::Plan.inspect

@@ -84,6 +84,8 @@ module GraphQL
 
       def self.class_for(schema, type, cache)
         return cache[type] if cache[type]
+        require 'pry-byebug'
+        #binding.pry
 
         case type.kind.name
         when "INPUT_OBJECT"
@@ -91,7 +93,7 @@ module GraphQL
         when "SCALAR"
           cache[type] = ScalarType.new(type)
         when "ENUM"
-          cache[type] = EnumType.new(type)
+          cache[type] = EnumType.new(type, raise_on_unknown_enum_value: schema.raise_on_unknown_enum_value)
         when "LIST"
           cache[type] = class_for(schema, type.of_type, cache).to_list_type
         when "NON_NULL"

@@ -90,8 +90,9 @@ module GraphQL
       result
     end
 
-    def initialize(schema:, execute: nil, enforce_collocated_callers: false)
+    def initialize(schema:, execute: nil, enforce_collocated_callers: false, raise_on_unknown_enum_value: true)
       @schema = self.class.load_schema(schema)
+      @schema.send(:define_singleton_method, :raise_on_unknown_enum_value) { raise_on_unknown_enum_value }
       @execute = execute
       @document = GraphQL::Language::Nodes::Document.new(definitions: [])
       @document_tracking_enabled = false
