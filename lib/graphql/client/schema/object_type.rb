@@ -179,10 +179,6 @@ module GraphQL
           @casted_data = {}
           @errors = errors
 
-
-          require 'pry-byebug'
-          #binding.pry if !definer.nil?
-
           # If we are not provided a definition, we can use this empty default
           definer ||= ObjectType::WithDefinition.new(self.class, {}, nil, [])
 

@@ -66,14 +66,15 @@ module GraphQL
         end
       end
 
-      def self.generate(schema, raise_on_unknown_enum_values:)
+      def self.generate(schema, raise_on_unknown_enum_value:)
         mod = Module.new
         mod.extend ClassMethods
+        mod.define_singleton_method(:raise_on_unknown_enum_value) { raise_on_unknown_enum_value }
 
         cache = {}
         schema.types.each do |name, type|
           next if name.start_with?("__")
-          if klass = class_for(schema, type, cache, raise_on_unknown_enum_values: raise_on_unknown_enum_values)
+          if klass = class_for(schema, type, cache)
             klass.schema_module = mod
             mod.set_class(name, klass)
           end
@@ -82,10 +83,8 @@ module GraphQL
         mod
       end
 
-      def self.class_for(schema, type, cache, raise_on_unknown_enum_values:)
+      def self.class_for(schema, type, cache)
         return cache[type] if cache[type]
-        require 'pry-byebug'
-        #binding.pry
 
         case type.kind.name
         when "INPUT_OBJECT"
@@ -93,16 +92,16 @@ module GraphQL
         when "SCALAR"
           cache[type] = ScalarType.new(type)
         when "ENUM"
-          cache[type] = EnumType.new(type, raise_on_unknown_enum_values: raise_on_unknown_enum_values)
+          cache[type] = EnumType.new(type)
         when "LIST"
-          cache[type] = class_for(schema, type.of_type, cache, raise_on_unknown_enum_values: raise_on_unknown_enum_values).to_list_type
+          cache[type] = class_for(schema, type.of_type, cache).to_list_type
         when "NON_NULL"
-          cache[type] = class_for(schema, type.of_type, cache, raise_on_unknown_enum_values: raise_on_unknown_enum_values).to_non_null_type
+          cache[type] = class_for(schema, type.of_type, cache).to_non_null_type
         when "UNION"
           klass = cache[type] = UnionType.new(type)
 
           type.possible_types.each do |possible_type|
-            possible_klass = class_for(schema, possible_type, cache, raise_on_unknown_enum_values: raise_on_unknown_enum_values)
+            possible_klass = class_for(schema, possible_type, cache)
             possible_klass.send :include, klass
           end
 
@@ -113,12 +112,12 @@ module GraphQL
           klass = cache[type] = ObjectType.new(type)
 
           type.interfaces.each do |interface|
-            klass.send :include, class_for(schema, interface, cache, raise_on_unknown_enum_values: raise_on_unknown_enum_values)
+            klass.send :include, class_for(schema, interface, cache)
           end
           # Legacy objects have `.all_fields`
           all_fields = type.respond_to?(:all_fields) ? type.all_fields : type.fields.values
           all_fields.each do |field|
-            klass.fields[field.name.to_sym] = class_for(schema, field.type, cache, raise_on_unknown_enum_values: raise_on_unknown_enum_values)
+            klass.fields[field.name.to_sym] = class_for(schema, field.type, cache)
           end
 
           klass

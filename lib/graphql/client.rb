@@ -44,8 +44,6 @@ module GraphQL
     # This ability will eventually be removed in future versions.
     attr_accessor :allow_dynamic_queries
 
-    attr_accessor :raise_on_unknown_enum_values
-
     def self.load_schema(schema)
       case schema
       when GraphQL::Schema, Class
@@ -92,7 +90,7 @@ module GraphQL
       result
     end
 
-    def initialize(schema:, execute: nil, enforce_collocated_callers: false, raise_on_unknown_enum_values: true)
+    def initialize(schema:, execute: nil, enforce_collocated_callers: false, raise_on_unknown_enum_value: true)
       @schema = self.class.load_schema(schema)
       @execute = execute
       @document = GraphQL::Language::Nodes::Document.new(definitions: [])
@@ -102,7 +100,7 @@ module GraphQL
       if schema.is_a?(Class)
         @possible_types = schema.possible_types
       end
-      @types = Schema.generate(@schema, raise_on_unknown_enum_values: raise_on_unknown_enum_values)
+      @types = Schema.generate(@schema, raise_on_unknown_enum_value: raise_on_unknown_enum_value)
     end
 
     # A cache of the schema's merged possible types
