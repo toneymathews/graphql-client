@@ -1,0 +1,25 @@
+containers:
+  default:
+    build:
+      from: ubuntu-latest
+      type: ci
+
+steps:
+  - label: ":ruby: Ruby Tests"
+    timeout: 10m
+    run:
+      - bundle: ~
+      - bundle exec rake test
+
+  - label: ":rubocop: Ruby Lint"
+    timeout: 10m
+    run:
+      - bundle: ~
+      - bundle exec rubocop
+
+  - label: ":ruby: Ruby Tests (latest dependencies)"
+    timeout: 10m
+    run:
+      - rm Gemfile.lock
+      - bundle: { cache_version: latest-gems }
+      - bundle exec rake test
