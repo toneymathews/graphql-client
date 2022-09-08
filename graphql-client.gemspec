@@ -21,7 +21,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rubocop", "~> 0.55"
   s.add_development_dependency "bundler"
 
-  s.required_ruby_version = ">= 2.7.2"
+  s.required_ruby_version = ">= 2.7.0"
 
   s.email = "engineering@github.com"
   s.authors = "GitHub"
