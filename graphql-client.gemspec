@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "rake", "~> 11.2"
   s.add_development_dependency "rubocop-github", "~> 0.10", "<= 0.16.0"
   s.add_development_dependency "rubocop", "~> 0.55"
+  s.add_development_dependency "bundler"
 
   s.required_ruby_version = ">= 2.1.0"
 
