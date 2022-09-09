@@ -1,3 +1,0 @@
-deploy:
-    override:
-      - buildkite-trigger graphql-client-publish-package
