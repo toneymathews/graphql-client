@@ -91,7 +91,6 @@ DEPENDENCIES
   bundler
   erubi (~> 1.6)
   erubis (~> 2.7)
-  graphql
   graphql-client!
   minitest (~> 5.9)
   rake (~> 11.2)
