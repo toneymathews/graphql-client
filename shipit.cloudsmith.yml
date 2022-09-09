@@ -1,0 +1,12 @@
+dependencies:
+  bundler:
+    without:
+      - test
+
+deploy:
+  override:
+    - buildkite-trigger graphql-client-publish-package
+
+ci:
+  require:
+    - buildkite/graphql-client
