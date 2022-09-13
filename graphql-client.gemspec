@@ -2,10 +2,14 @@
 Gem::Specification.new do |s|
   s.name = "graphql-client"
   s.version = "0.18.1"
-  s.summary = "GraphQL Client"
+  s.summary = "A private fork of Github's GraphQL Client"
   s.description = "A Ruby library for declaring, composing and executing GraphQL queries"
-  s.homepage = "https://github.com/github/graphql-client"
+  s.homepage = "https://github.com/Shopify/graphql-client"
   s.license = "MIT"
+  s.metadata["allowed_push_host"] = "https://pkgs.shopify.io"
+  s.metadata["homepage_uri"] = s.homepage
+  s.metadata["source_code_uri"] = s.homepage
+  s.metadata["changelog_uri"] = "#{s.homepage}/releases"
 
   s.files = Dir["README.md", "LICENSE", "lib/**/*.rb"]
 
