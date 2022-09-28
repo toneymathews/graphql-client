@@ -66,9 +66,10 @@ module GraphQL
         end
       end
 
-      def self.generate(schema)
+      def self.generate(schema, raise_on_unknown_enum_value:)
         mod = Module.new
         mod.extend ClassMethods
+        mod.define_singleton_method(:raise_on_unknown_enum_value) { raise_on_unknown_enum_value }
 
         cache = {}
         schema.types.each do |name, type|
